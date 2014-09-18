@@ -3,16 +3,19 @@ package com.marcyliao.game.finddifference.view;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.marcyliao.game.finddifference.R;
 import com.marcyliao.game.finddifference.com.model.tile.CharTile;
@@ -21,6 +24,7 @@ import com.marcyliao.game.finddifference.com.model.tile.Tile;
 import com.marcyliao.game.finddifference.core.controller.GameController;
 import com.marcyliao.game.finddifference.core.controller.listener.GameListener;
 import com.marcyliao.game.finddifference.utility.SizeHelper;
+import com.marcyliao.game.finddifference.utility.SoundHelper;
 import com.marcyliao.game.finddifference.utility.ViewHelper;
 
 import org.w3c.dom.Text;
@@ -56,6 +60,12 @@ public class GameActivity extends Activity {
     //other helper params
     private int gameBoardLength;
 
+    //sounds
+    private MediaPlayer clickSound;
+    private MediaPlayer correctSound;
+    private MediaPlayer gameOverSound;
+    private MediaPlayer wrongSound;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,9 +74,24 @@ public class GameActivity extends Activity {
         initWidgets();
         initPanels();
         initGameController();
+        initSounds();
+        setHighScreenBrightness();
         
         gameController.startGame();
 
+    }
+
+    private void setHighScreenBrightness() {
+        WindowManager.LayoutParams lp = getWindow().getAttributes();
+        lp.screenBrightness = 1.0f;
+        getWindow().setAttributes(lp);
+    }
+
+    private void initSounds() {
+        clickSound = MediaPlayer.create(this, R.raw.click);
+        correctSound = MediaPlayer.create(this, R.raw.correct);
+        wrongSound = MediaPlayer.create(this, R.raw.incorrect);
+        gameOverSound = MediaPlayer.create(this, R.raw.gameover);
     }
 
     private void initGameController() {
@@ -96,6 +121,7 @@ public class GameActivity extends Activity {
                 buttonShare.setVisibility(View.VISIBLE);
                 buttonBack.setVisibility(View.VISIBLE);
                 buttonRestart.setVisibility(View.VISIBLE);
+                SoundHelper.sound(gameOverSound);
             }
 
             @Override
@@ -105,34 +131,43 @@ public class GameActivity extends Activity {
             }
 
             @Override
-            public void onStartLevel(int level, int column, int trueItemIndex, Tile correctTile, Tile wrongTile) {
+            public void onStartLevel(int level, int column, int trueItemIndex, final Tile correctTile, Tile wrongTile) {
                 int size = column * column;
                 if(gameBoard.getChildCount() > 0)
                     gameBoard.removeAllViews();
                 gameBoard.setRowCount(column);
                 gameBoard.setColumnCount(column);
-
                 for (int i = 0; i < size; i++) {
                     Button button = null;
 
                     if (i == trueItemIndex) {
                         button = getButtonFromTile(correctTile);
+                        if(correctTile instanceof CharTile){
+                            Toast.makeText(GameActivity.this,((CharTile)correctTile).getTextColor().r+" "+((CharTile)correctTile).getTextColor().g+" "+((CharTile)correctTile).getTextColor().b,Toast.LENGTH_SHORT).show();
+                        }
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(gameController.getCurrentStatus() == GameController.GameStatus.GOING)
+                                if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
                                     gameController.chooseCorrect();
+                                    SoundHelper.sound(correctSound);
+                                }
+
                             }
                         });
+                        ViewHelper.addClickRightEffect(button);
                     } else {
                         button = getButtonFromTile(wrongTile);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
-                                if(gameController.getCurrentStatus() == GameController.GameStatus.GOING)
+                                if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
                                     gameController.chooseWrong();
+                                    SoundHelper.sound(wrongSound);
+                                }
                             }
                         });
+                        ViewHelper.addClickWrongEffect(button);
                     }
 
                     //common
@@ -275,6 +310,7 @@ public class GameActivity extends Activity {
         buttonRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                SoundHelper.sound(clickSound);
                 gameController.restartGame();
             }
         });
@@ -283,7 +319,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                finish();
+                SoundHelper.sound(clickSound);finish();
             }
         });
 
@@ -291,7 +327,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                gameController.pauseGame();
+                SoundHelper.sound(clickSound);gameController.pauseGame();
             }
         });
 
@@ -299,7 +335,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                //TODO: Share
+                SoundHelper.sound(clickSound);//TODO: Share
             }
         });
 
@@ -307,7 +343,7 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                gameController.resumeGame();
+                SoundHelper.sound(clickSound);gameController.resumeGame();
             }
         });
     }

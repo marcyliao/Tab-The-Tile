@@ -1,5 +1,6 @@
 package com.marcyliao.game.finddifference.com.model.mode;
 
+import android.app.Application;
 import android.widget.Toast;
 
 import com.marcyliao.game.finddifference.com.model.component.Color;
@@ -189,8 +190,6 @@ public class CharMode implements Mode{
             new Color(255,90,13,67),new Color(255,244,222,41),
             new Color(255,87,96,105),new Color(255,247,68,97),
             new Color(255,23,50,7),new Color(255,230,180,80),
-            new Color(255,153,80,84),new Color(255,130,179,61),
-            new Color(255,0,90,171),new Color(255,255,222,0),
             new Color(255,255,94,72),new Color(255,0,34,40),
             new Color(255,53,44,10),new Color(255,255,255,255),
             new Color(255,82,75,46),new Color(255,171,92,37),
@@ -198,7 +197,6 @@ public class CharMode implements Mode{
             new Color(255,170,138,87),new Color(255,113,175,164),
             new Color(255,101,147,74),new Color(255,160,191,124),
             new Color(255,217,116,43),new Color(255,230,180,80),
-            new Color(255,230,155,3),new Color(255,209,73,78),
             new Color(255,18,53,85),new Color(255,209,73,78),
             new Color(255,230,155,3),new Color(255,219,208,167)
     };
