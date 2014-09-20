@@ -11,7 +11,7 @@ public interface GameListener {
     public void  onProgressUpdated(int remainMilliseconds);
     public void onGameOver();
     public void onGameStart();
-    public void onStartLevel(int level, int column, int trueItemIndex, Tile correctTile, Tile wrongTile);
+    public void onRefreshLevel(int level, int column, int trueItemIndex, Tile correctTile, Tile wrongTile);
     public void onColumnCountUpdated(int columnCount);
     public void onLevelUpdated(int level);
     public void onResume();

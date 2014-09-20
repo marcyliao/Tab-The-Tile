@@ -58,15 +58,15 @@ public class GameController {
         level++;
         gameListener.onLevelUpdated(level);
 
+        remainMilliseconds += mode.getRecoverTime(level);
+        if(remainMilliseconds >= 10000000)
+            remainMilliseconds = 10000000;
+
         mode.setCurrentLevel(level);
         if(level > tempBestLevel) {
             tempBestLevel = level;
             gameListener.onBestLevelUpdated(tempBestLevel);
         }
-
-        remainMilliseconds += getRecoverTime(level);
-        if(remainMilliseconds >= 10000000)
-            remainMilliseconds = 10000000;
 
         startLevel();
     }
@@ -77,13 +77,17 @@ public class GameController {
 
     private void startLevel() {
         mode.setCurrentLevel(level);
+        reorderTiles();
+
+    }
+
+    private void reorderTiles() {
         int column = getColumnCount(level);
         int size = column*column;
         int trueItemIndex = (int) Math.round((size-1)*Math.random());
 
-        gameListener.onStartLevel(level, column, trueItemIndex, mode.getCorrectTile(), mode.getWrongTile());
+        gameListener.onRefreshLevel(level, column, trueItemIndex, mode.getCorrectTile(), mode.getWrongTile());
         gameListener.onColumnCountUpdated(getColumnCount(level));
-
     }
 
     public void startGame() {
@@ -151,19 +155,14 @@ public class GameController {
     };
 
     private void restartLevel() {
-        startLevel();
+        reorderTiles();
     }
 
 
-    private int getRecoverTime(int level) {
-        int recoverTIme = (int)((level/15.0+1)*1000000);
-        if(recoverTIme > 4000000)
-            recoverTIme = 4000000;
-        return recoverTIme;
-    }
+
 
     private int getColumnCount(int level) {
-        int columns = 4 + level/10;
+        int columns = 3 + level/10;
         if(columns > 8)
             columns = 8;
         return columns;

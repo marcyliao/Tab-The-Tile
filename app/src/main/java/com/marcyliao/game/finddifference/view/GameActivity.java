@@ -3,19 +3,14 @@ package com.marcyliao.game.finddifference.view;
 import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
-import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marcyliao.game.finddifference.R;
 import com.marcyliao.game.finddifference.com.model.tile.CharTile;
@@ -24,10 +19,8 @@ import com.marcyliao.game.finddifference.com.model.tile.Tile;
 import com.marcyliao.game.finddifference.core.controller.GameController;
 import com.marcyliao.game.finddifference.core.controller.listener.GameListener;
 import com.marcyliao.game.finddifference.utility.SizeHelper;
-import com.marcyliao.game.finddifference.utility.SoundHelper;
+import com.marcyliao.game.finddifference.utility.SoundManager;
 import com.marcyliao.game.finddifference.utility.ViewHelper;
-
-import org.w3c.dom.Text;
 
 public class GameActivity extends Activity {
     //UI properties
@@ -42,16 +35,24 @@ public class GameActivity extends Activity {
     private TextView textViewLevel;
     private TextView textViewBestNumber;
 
+    private View buttonGroupGameOver;
     private View buttonRestart;
     private View buttonShare;
     private View buttonBack;
 
-    private View buttonStart;
     private View buttonPause;
+
+    private View buttonGroupPause;
+    private View buttonStart;
+    private View buttonGiveUp;
+
+    private View buttonGiveUpYes;
+    private View buttonGiveUpNo;
 
     //panels
     private RelativeLayout relativeLayoutGameOver;
     private RelativeLayout relativeLayoutPause;
+    private RelativeLayout relativeLayoutGiveUp;
     private GridLayout gameBoard;
 
     //controller
@@ -61,10 +62,8 @@ public class GameActivity extends Activity {
     private int gameBoardLength;
 
     //sounds
-    private MediaPlayer clickSound;
-    private MediaPlayer correctSound;
-    private MediaPlayer gameOverSound;
-    private MediaPlayer wrongSound;
+    private SoundManager soundManager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,15 +82,15 @@ public class GameActivity extends Activity {
 
     private void setHighScreenBrightness() {
         WindowManager.LayoutParams lp = getWindow().getAttributes();
-        lp.screenBrightness = 1.0f;
+        if(lp.screenBrightness < 0.7f)
+            lp.screenBrightness = 0.7f;
         getWindow().setAttributes(lp);
     }
 
     private void initSounds() {
-        clickSound = MediaPlayer.create(this, R.raw.click);
-        correctSound = MediaPlayer.create(this, R.raw.correct);
-        wrongSound = MediaPlayer.create(this, R.raw.incorrect);
-        gameOverSound = MediaPlayer.create(this, R.raw.gameover);
+        SoundManager.getInstance();
+        SoundManager.initSounds(this);
+        SoundManager.loadSounds();
     }
 
     private void initGameController() {
@@ -106,7 +105,7 @@ public class GameActivity extends Activity {
             public void onPaused() {
                 hideAll();
                 relativeLayoutPause.setVisibility(View.VISIBLE);
-                buttonStart.setVisibility(View.VISIBLE);
+                buttonGroupPause.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -118,10 +117,8 @@ public class GameActivity extends Activity {
             public void onGameOver() {
                 hideAll();
                 relativeLayoutGameOver.setVisibility(View.VISIBLE);
-                buttonShare.setVisibility(View.VISIBLE);
-                buttonBack.setVisibility(View.VISIBLE);
-                buttonRestart.setVisibility(View.VISIBLE);
-                SoundHelper.sound(gameOverSound);
+                buttonGroupGameOver.setVisibility(View.VISIBLE);
+                SoundManager.playSound(R.raw.gameover);
             }
 
             @Override
@@ -131,7 +128,7 @@ public class GameActivity extends Activity {
             }
 
             @Override
-            public void onStartLevel(int level, int column, int trueItemIndex, final Tile correctTile, Tile wrongTile) {
+            public void onRefreshLevel(int level, int column, int trueItemIndex, final Tile correctTile, Tile wrongTile) {
                 int size = column * column;
                 if(gameBoard.getChildCount() > 0)
                     gameBoard.removeAllViews();
@@ -142,16 +139,13 @@ public class GameActivity extends Activity {
 
                     if (i == trueItemIndex) {
                         button = getButtonFromTile(correctTile);
-                        if(correctTile instanceof CharTile){
-                            Toast.makeText(GameActivity.this,((CharTile)correctTile).getTextColor().r+" "+((CharTile)correctTile).getTextColor().g+" "+((CharTile)correctTile).getTextColor().b,Toast.LENGTH_SHORT).show();
-                        }
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
                                     gameController.chooseCorrect();
-                                    SoundHelper.sound(correctSound);
                                 }
+                                SoundManager.playSound(R.raw.correct);
 
                             }
                         });
@@ -163,8 +157,8 @@ public class GameActivity extends Activity {
                             public void onClick(View view) {
                                 if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
                                     gameController.chooseWrong();
-                                    SoundHelper.sound(wrongSound);
                                 }
+                                SoundManager.playSound(R.raw.incorrect);
                             }
                         });
                         ViewHelper.addClickWrongEffect(button);
@@ -230,20 +224,27 @@ public class GameActivity extends Activity {
     }
 
     private void hideAll() {
-        buttonRestart.setVisibility(View.INVISIBLE);
-        buttonShare.setVisibility(View.INVISIBLE);
-        buttonBack.setVisibility(View.INVISIBLE);
-
-        buttonStart.setVisibility(View.INVISIBLE);
+        buttonGroupGameOver.setVisibility(View.INVISIBLE);
+        buttonGroupPause.setVisibility(View.INVISIBLE);
         buttonPause.setVisibility(View.INVISIBLE);
 
         relativeLayoutGameOver.setVisibility(View.INVISIBLE);
         relativeLayoutPause.setVisibility(View.INVISIBLE);
+        relativeLayoutGiveUp.setVisibility(View.INVISIBLE);
     }
 
     private void initPanels() {
         relativeLayoutPause = (RelativeLayout)findViewById(R.id.relativeLayoutPause);
         relativeLayoutGameOver = (RelativeLayout)findViewById(R.id.relativeLayoutGameOver);
+        relativeLayoutGameOver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                relativeLayoutGameOver.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        relativeLayoutGiveUp = (RelativeLayout)findViewById(R.id.relativeLayoutGiveUp);
+
 
         buildGameBoard();
     }
@@ -302,6 +303,12 @@ public class GameActivity extends Activity {
         buttonPause = ViewHelper.getButtonWithEffect(this,R.id.buttonPause);
         buttonShare = ViewHelper.getButtonWithEffect(this,R.id.buttonShare);
         buttonStart = ViewHelper.getButtonWithEffect(this,R.id.buttonStart);
+        buttonGiveUp =  ViewHelper.getButtonWithEffect(this, R.id.buttonPauseBack);
+        buttonGiveUpYes = ViewHelper.getButtonWithEffect(this, R.id.buttonGiveUpYes);
+        buttonGiveUpNo = ViewHelper.getButtonWithEffect(this, R.id.buttonGiveUpNo);
+
+        buttonGroupGameOver = findViewById(R.id.buttonGroupGameOver);
+        buttonGroupPause = findViewById(R.id.buttonGroupPause);
 
         initButtonListeners();
     }
@@ -310,7 +317,7 @@ public class GameActivity extends Activity {
         buttonRestart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SoundHelper.sound(clickSound);
+                SoundManager.playSound(R.raw.click);
                 gameController.restartGame();
             }
         });
@@ -319,7 +326,8 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                SoundHelper.sound(clickSound);finish();
+                SoundManager.playSound(R.raw.click);
+                finish();
             }
         });
 
@@ -327,7 +335,8 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                SoundHelper.sound(clickSound);gameController.pauseGame();
+                SoundManager.playSound(R.raw.click);
+                gameController.pauseGame();
             }
         });
 
@@ -335,7 +344,8 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                SoundHelper.sound(clickSound);//TODO: Share
+                SoundManager.playSound(R.raw.click);
+                //TODO: Share
             }
         });
 
@@ -343,7 +353,32 @@ public class GameActivity extends Activity {
 
             @Override
             public void onClick(View view) {
-                SoundHelper.sound(clickSound);gameController.resumeGame();
+                SoundManager.playSound(R.raw.click);
+                gameController.resumeGame();
+            }
+        });
+
+        buttonGiveUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoundManager.playSound(R.raw.click);
+                relativeLayoutGiveUp.setVisibility(View.VISIBLE);
+            }
+        });
+
+        buttonGiveUpYes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoundManager.playSound(R.raw.click);
+                finish();
+            }
+        });
+
+        buttonGiveUpNo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SoundManager.playSound(R.raw.click);
+                relativeLayoutGiveUp.setVisibility(View.INVISIBLE);
             }
         });
     }

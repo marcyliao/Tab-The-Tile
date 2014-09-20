@@ -22,6 +22,7 @@
             android:layout_below="@+id/linearLayoutGameInfo"
             android:id="@+id/progressBarTimer"
             android:layout_marginLeft="20dp"
+            android:progressDrawable="@drawable/progress_bar"
             android:layout_marginRight="20dp"
             android:indeterminate="false"/>
 
@@ -76,15 +77,16 @@
                     android:id="@+id/linearLayoutLevels"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:padding="10dp" >
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp" >
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="0sp"
                         android:layout_weight="0.8"
                         android:textColor="#fff"
-                        android:text="Level"
-                        android:textSize="20sp"
+                        android:text="LEVEL"
+                        android:textSize="17sp"
                         android:gravity="center_horizontal|bottom" />
 
                     <TextView
@@ -112,15 +114,16 @@
                     android:id="@+id/linearLayoutBest"
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
-                    android:padding="10dp" >
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp">
 
                     <TextView
                         android:layout_width="fill_parent"
                         android:layout_height="0sp"
                         android:layout_weight="0.8"
                         android:textColor="#fff"
-                        android:text="Best"
-                        android:textSize="20sp"
+                        android:text="BEST"
+                        android:textSize="17sp"
                         android:gravity="center_horizontal|bottom" />
 
                     <TextView
@@ -168,10 +171,11 @@
             android:layout_width="230dp"
             android:layout_height="80dp"
             android:orientation="horizontal"
-            android:background="@drawable/gameover_button_group_bg"
+            android:background="@drawable/game_button_group_bg"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:padding="10dp">
+            android:padding="10dp"
+            android:id="@+id/buttonGroupGameOver">
 
             <ImageButton
                 android:layout_width="0dp"
@@ -207,22 +211,44 @@
         <ImageButton
             android:layout_width="230dp"
             android:layout_height="80dp"
-            android:id="@+id/buttonStart"
-            android:background="@drawable/start_button_bg"
-            android:src="@drawable/start"
-            android:padding="20dp"
-            android:scaleType="fitCenter"
-            android:layout_centerHorizontal="true" />
-
-        <ImageButton
-            android:layout_width="230dp"
-            android:layout_height="80dp"
             android:id="@+id/buttonPause"
             android:background="@drawable/pause_button_bg"
             android:src="@drawable/pause"
             android:padding="20dp"
             android:scaleType="fitCenter"
             android:layout_centerHorizontal="true" />
+
+        <LinearLayout
+            android:layout_width="230dp"
+            android:layout_height="80dp"
+            android:orientation="horizontal"
+            android:background="@drawable/game_button_group_bg"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:padding="10dp"
+            android:id="@+id/buttonGroupPause">
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="fill_parent"
+                android:background="@drawable/green_bg_left_corner"
+                android:src="@drawable/back"
+                android:id="@+id/buttonPauseBack"
+                android:padding="15dp"
+                android:scaleType="fitCenter" />
+
+            <ImageButton
+                android:layout_width="0dp"
+                android:layout_weight="2"
+                android:layout_height="fill_parent"
+                android:id="@+id/buttonStart"
+                android:background="@drawable/deep_orange_bg_right_corner"
+                android:src="@drawable/start"
+                android:padding="20dp"
+                android:scaleType="fitCenter"
+                android:layout_centerHorizontal="true" />
+        </LinearLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -262,6 +288,60 @@
             android:textColor="#f17541"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="280dp"
+        android:layout_height="160dp"
+        android:background="@drawable/message_bg"
+        android:clickable="true"
+        android:id="@+id/relativeLayoutGiveUp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GIVE UP THIS PLAY?"
+            android:textSize="20dp"
+            android:textColor="#f17541"
+            android:layout_marginTop="40dp"
+            android:layout_centerHorizontal="true"
+            android:id="@+id/textViewGiveUpPlay" />
+
+        <RelativeLayout
+            android:layout_width="160dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_below="@+id/textViewGiveUpPlay"
+            android:layout_centerHorizontal="true">
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:text="YES"
+                android:textColor="#eee"
+                android:background="@drawable/grey_bg"
+                android:id="@+id/buttonGiveUpYes"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true" />
+
+            <Button
+                style="?android:attr/buttonStyleSmall"
+                android:layout_width="60dp"
+                android:layout_height="40dp"
+                android:text="NO"
+                android:textColor="#eee"
+                android:background="@drawable/grey_bg"
+                android:id="@+id/buttonGiveUpNo"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true" />
+        </RelativeLayout>
+
+
     </RelativeLayout>
 
 

@@ -75,6 +75,9 @@ public class Profile {
     public int getCurrentMode() {
         return currentMode;
     }
+    public String getCurrentModeName() {
+        return getModeName(getCurrentMode());
+    }
 
     public void setCurrentMode(int currentMode) {
         this.currentMode = currentMode;
@@ -97,10 +100,24 @@ public class Profile {
         switch (currentMode) {
             case Mode.COLOR:
                 setBestOfColorMode(newBest);
+                break;
             case Mode.CHAR:
                 setBestOfCharMode(newBest);
+                break;
             case Mode.MIXED:
                 setBestOfMixedMode(newBest);
+                break;
         }
+    }
+
+    public static String getModeName(int mode) {
+        if(mode == Mode.MIXED)
+            return "MIXED";
+        else if (mode == Mode.COLOR)
+            return "COLOR";
+        else if (mode == Mode.CHAR)
+            return "CHAR";
+        else
+            return null;
     }
 }

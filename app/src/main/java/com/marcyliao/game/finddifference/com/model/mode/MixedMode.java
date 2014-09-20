@@ -36,4 +36,9 @@ public class MixedMode implements Mode{
 
         currentMode.setCurrentLevel(level);
     }
+
+    @Override
+    public int getRecoverTime(int level) {
+        return currentMode.getRecoverTime(level);
+    }
 }

@@ -1,8 +1,5 @@
 package com.marcyliao.game.finddifference.com.model.mode;
 
-import android.app.Application;
-import android.widget.Toast;
-
 import com.marcyliao.game.finddifference.com.model.component.Color;
 import com.marcyliao.game.finddifference.com.model.tile.CharTile;
 import com.marcyliao.game.finddifference.com.model.tile.Tile;
@@ -63,13 +60,33 @@ public class CharMode implements Mode{
     }
 
     private void decideText(int level) {
-        int index = (level-10)/2;
+
+        int begin;
+        int end;
+        int numCharParis = charSet.length/2;
+        if(level < 20) {
+            begin = 0;
+            end = numCharParis/4 - 1;
+        }
+        else if (level < 40) {
+            begin = numCharParis/4 - 1;
+            end = 3*numCharParis/4 - 1;
+        }
+        else if (level < 100) {
+            begin = 2 * numCharParis/4 - 1;
+            end = numCharParis - 1;
+        }
+        else {
+            begin = 0;
+            end = numCharParis - 1;
+        }
+
+
+        int index = (begin + (int)Math.round(Math.random()*(end-begin)))*2;
         if(index < 0)
             index = 0;
-        int span = charSet.length >> 1;
-        if(index+span >= charSet.length)
-            index = charSet.length-span-1;
-        index = (index + ((int)Math.round(Math.random()*span)))/2*2;
+        if(index >= charSet.length)
+            index = charSet.length - 2;
 
         if(Math.random() > 0.5) {
             correctTile.setText(charSet[index]);
@@ -79,6 +96,13 @@ public class CharMode implements Mode{
             correctTile.setText(charSet[index + 1]);
             wrongTile.setText(charSet[index]);
         }
+    }
+
+    public int getRecoverTime(int level) {
+        int recoverTIme = (int)((level/12.0+1)*1000000);
+        if(recoverTIme > 4500000)
+            recoverTIme = 4500000;
+        return recoverTIme;
     }
 
     private String[] charSet = {
@@ -114,7 +138,6 @@ public class CharMode implements Mode{
             "芉","芏",
             "召","叧",
             "吞","吴",
-            "卍","卐",
             "凸","凹",
             "辉","煌",
             "お","あ",
@@ -125,7 +148,6 @@ public class CharMode implements Mode{
             "左","右",
             "自","目",
             "日","目",
-            "孑","孓",
             "考","老",
             "甲","由",
             "o","O",
@@ -138,11 +160,9 @@ public class CharMode implements Mode{
             "ـژ","ـز",
             "ـظ","ـط",
             "人","入",
-            "亾","兦",
             "ش","س",
             "ك","ق",
             "ي","ى",
-            "土","士",
             "己","已",
             "子","孓",
             "q","p",
@@ -154,6 +174,7 @@ public class CharMode implements Mode{
             "ـو","ـه",
             "Ã","Ä",
             "Ć","Ĉ",
+            "孑","孓",
             "Β","Б",
             "Â","Ã",
             "버","바",
@@ -164,6 +185,7 @@ public class CharMode implements Mode{
             "사","서",
             "룹","몹",
             "몰","솔",
+            "卍","卐",
             "릿","릇",
             "받","벋",
             "氷","永",
@@ -178,9 +200,11 @@ public class CharMode implements Mode{
             "饕","餮",
             "耄","耋",
             "未","末",
+            "亾","兦",
             "魍","魉",
             "魑","魅",
             "幣","弊",
+            "土","士",
             "ビ","ピ",
             "ぽ","ぱ"
     };

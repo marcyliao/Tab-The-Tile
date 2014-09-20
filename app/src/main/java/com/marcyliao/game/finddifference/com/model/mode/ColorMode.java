@@ -33,14 +33,20 @@ public class ColorMode implements Mode{
         int b = rand10To250();
         Color wrongColor = new Color(255, r, g, b);
 
-        int diff = 12 - level/12;
-        if(diff < 8){
-            diff = 8;
+        int diff = 12 - level/10;
+        if(diff < 5){
+            diff = 5;
         }
-        Color correctColor = new Color(255, randDiff255(r, diff), randDiff255(g, diff), randDiff255(b, diff));
+        boolean dir = Math.random() > 0.5;
+        Color correctColor = new Color(255, randDiff255(r, diff, dir), randDiff255(g, diff, dir), randDiff255(b, diff, dir));
 
         wrongTile.setColor(wrongColor);
         correctTile.setColor(correctColor);
+    }
+
+    @Override
+    public int getRecoverTime(int level) {
+        return 400000+10000*level;
     }
 
 
@@ -48,9 +54,9 @@ public class ColorMode implements Mode{
         return (int) Math.round(10+240 * Math.random());
     }
 
-    private int randDiff255(int c, int diff) {
+    private int randDiff255(int c, int diff, boolean dir) {
         int newC;
-        if(Math.random() > 0.5f) {
+        if(dir) {
             newC = c+diff;
             newC = (newC >= 255? 255: newC);
         }
