@@ -20,7 +20,7 @@ public class GameController {
     private Mode mode;
 
     public static final int MAX_TIME = 10000000;
-    private static final int INIT_REMAIN_TIME = 5000000;
+    private static final int INIT_REMAIN_TIME = 8000000;
 
     // status
     private GameStatus currentStatus;

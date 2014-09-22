@@ -3,6 +3,7 @@ package com.marcyliao.game.finddifference.com.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.marcyliao.game.finddifference.R;
 import com.marcyliao.game.finddifference.com.model.mode.Mode;
 
 /**
@@ -31,7 +32,7 @@ public class Profile {
         bestOfMixedMode = profilePreference.getInt(BEST_MIXED_MODE,0);
         bestOfColorMode = profilePreference.getInt(BEST_COLOR_MODE,0);
         bestOfCharMode = profilePreference.getInt(BEST_CHAR_MODE,0);
-        currentMode = profilePreference.getInt(CURRENT_MODE, Mode.MIXED);
+        currentMode = profilePreference.getInt(CURRENT_MODE, Mode.COLOR);
 
         return this;
 
@@ -75,8 +76,8 @@ public class Profile {
     public int getCurrentMode() {
         return currentMode;
     }
-    public String getCurrentModeName() {
-        return getModeName(getCurrentMode());
+    public String getCurrentModeName(Context context) {
+        return getModeName(getCurrentMode(),context);
     }
 
     public void setCurrentMode(int currentMode) {
@@ -110,13 +111,13 @@ public class Profile {
         }
     }
 
-    public static String getModeName(int mode) {
+    public static String getModeName(int mode, Context context) {
         if(mode == Mode.MIXED)
-            return "MIXED";
+            return context.getString(R.string.mixed);
         else if (mode == Mode.COLOR)
-            return "COLOR";
+            return context.getString(R.string.color);
         else if (mode == Mode.CHAR)
-            return "CHAR";
+            return context.getString(R.string.character);
         else
             return null;
     }

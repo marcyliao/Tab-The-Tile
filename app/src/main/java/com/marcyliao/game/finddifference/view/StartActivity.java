@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.marcyliao.game.finddifference.R;
 import com.marcyliao.game.finddifference.com.model.Profile;
 import com.marcyliao.game.finddifference.com.model.Setting;
 import com.marcyliao.game.finddifference.com.model.mode.Mode;
+import com.marcyliao.game.finddifference.utility.ShareUtility;
 import com.marcyliao.game.finddifference.utility.SoundManager;
 import com.marcyliao.game.finddifference.utility.ViewHelper;
 
@@ -27,17 +30,54 @@ public class StartActivity extends Activity {
     private TextView textViewBest;
     private TextView textViewMode;
 
+    //layouts
+    private RelativeLayout relativeLayoutBottomPanel;
+    private RelativeLayout relativeLayoutLogo;
+
     //sound
     private SoundManager soundManager;
+
+    //anim
+    private Animation animSlideUp;
+    private Animation fadeIn;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start);
 
+        initMovingBackground();
         initWidgets();
+        initPanels();
         initSounds();
+        initAnimation();
 
+    }
+
+    private void initMovingBackground() {
+        View imageViewBg1 = findViewById(R.id.imageViewBg1);
+        View imageViewBg2 = findViewById(R.id.imageViewBg2);
+        imageViewBg1.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_from_right));
+        imageViewBg2.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_fo_left));
+    }
+
+    private void initPanels() {
+        relativeLayoutBottomPanel = (RelativeLayout)findViewById(R.id.relativeLayoutBottomPanel);
+        relativeLayoutLogo = (RelativeLayout)findViewById(R.id.relativeLayoutLogo);
+    }
+
+    private void initAnimation() {
+        animSlideUp = AnimationUtils.loadAnimation(this,R.anim.slide_up);
+        fadeIn = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        startAnimation();
+
+
+    }
+
+    private void startAnimation() {
+        relativeLayoutLogo.startAnimation(fadeIn);
+        relativeLayoutBottomPanel.startAnimation(animSlideUp);
     }
 
     private void initSounds() {
@@ -111,13 +151,20 @@ public class StartActivity extends Activity {
             }
         });
 
+        buttonShare.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ShareUtility.shareApp(StartActivity.this);
+            }
+        });
+
         updateWidgets();
     }
 
     private void updateWidgets() {
         Profile profile = Profile.loadProfile(this);
         textViewBest.setText(String.valueOf(profile.getBestOfCurrentMode()));
-        textViewMode.setText(profile.getCurrentModeName());
+        textViewMode.setText(profile.getCurrentModeName(this));
 
         Setting setting = Setting.loadSetting(this);
         if(setting.isSoundSwitch()) {
@@ -131,6 +178,13 @@ public class StartActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        startAnimation();
         updateWidgets();
+    }
+
+    @Override
+    protected void onDestroy() {
+        SoundManager.cleanup();
+        super.onDestroy();
     }
 }

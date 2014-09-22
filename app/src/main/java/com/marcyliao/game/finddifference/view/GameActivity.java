@@ -6,8 +6,10 @@ import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.GridLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -53,16 +55,23 @@ public class GameActivity extends Activity {
     private RelativeLayout relativeLayoutGameOver;
     private RelativeLayout relativeLayoutPause;
     private RelativeLayout relativeLayoutGiveUp;
-    private GridLayout gameBoard;
+    private LinearLayout gameBoard;
+    private View relativeLayoutTopPanel;
 
     //controller
     private GameController gameController;
 
+    //anims
+    private Animation animBubble;
+    private Animation animBlink;
+    private Animation fadeIn;
+    private Animation slideDown;
+
+
     //other helper params
     private int gameBoardLength;
-
-    //sounds
-    private SoundManager soundManager;
+    private View trueTileButton;
+    private Tile trueTile;
 
 
     @Override
@@ -70,14 +79,21 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
+        initAnimation();
         initWidgets();
         initPanels();
         initGameController();
-        initSounds();
         setHighScreenBrightness();
         
         gameController.startGame();
 
+    }
+
+    private void initAnimation() {
+        animBubble = AnimationUtils.loadAnimation(this,R.anim.bubble);
+        animBlink = AnimationUtils.loadAnimation(this,R.anim.blink);
+        fadeIn = AnimationUtils.loadAnimation(this,R.anim.fade_in);
+        slideDown = AnimationUtils.loadAnimation(this,R.anim.slide_down);
     }
 
     private void setHighScreenBrightness() {
@@ -105,6 +121,7 @@ public class GameActivity extends Activity {
             public void onPaused() {
                 hideAll();
                 relativeLayoutPause.setVisibility(View.VISIBLE);
+                relativeLayoutPause.startAnimation(fadeIn);
                 buttonGroupPause.setVisibility(View.VISIBLE);
             }
 
@@ -117,8 +134,14 @@ public class GameActivity extends Activity {
             public void onGameOver() {
                 hideAll();
                 relativeLayoutGameOver.setVisibility(View.VISIBLE);
+                relativeLayoutGameOver.startAnimation(fadeIn);
                 buttonGroupGameOver.setVisibility(View.VISIBLE);
                 SoundManager.playSound(R.raw.gameover);
+
+                if(trueTile.getType() == Tile.Type.CHAR)
+                    trueTileButton.startAnimation(animBlink);
+                else if(trueTile.getType() == Tile.Type.COLOR)
+                    trueTileButton.startAnimation(animBubble);
             }
 
             @Override
@@ -129,52 +152,62 @@ public class GameActivity extends Activity {
 
             @Override
             public void onRefreshLevel(int level, int column, int trueItemIndex, final Tile correctTile, Tile wrongTile) {
-                int size = column * column;
+                int index = 0;
+
                 if(gameBoard.getChildCount() > 0)
                     gameBoard.removeAllViews();
-                gameBoard.setRowCount(column);
-                gameBoard.setColumnCount(column);
-                for (int i = 0; i < size; i++) {
-                    Button button = null;
+                for (int i = 0; i < column; i++) {
+                    LinearLayout row = new LinearLayout(GameActivity.this);
+                    LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+                    row.setOrientation(LinearLayout.HORIZONTAL);
+                    row.setLayoutParams(rowParams);
 
-                    if (i == trueItemIndex) {
-                        button = getButtonFromTile(correctTile);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
-                                    gameController.chooseCorrect();
-                                }
-                                SoundManager.playSound(R.raw.correct);
+                    for(int j=0; j < column; j++) {
 
-                            }
-                        });
-                        ViewHelper.addClickRightEffect(button);
-                    } else {
-                        button = getButtonFromTile(wrongTile);
-                        button.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
-                                    gameController.chooseWrong();
+                        Button button = null;
+
+                        if (index == trueItemIndex) {
+                            button = getButtonFromTile(correctTile);
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
+                                        gameController.chooseCorrect();
+                                    }
+                                    SoundManager.playSound(R.raw.correct);
+
                                 }
-                                SoundManager.playSound(R.raw.incorrect);
-                            }
-                        });
-                        ViewHelper.addClickWrongEffect(button);
+                            });
+                            ViewHelper.addClickRightEffect(button);
+                            trueTileButton = button;
+                            trueTile = correctTile;
+                        } else {
+                            button = getButtonFromTile(wrongTile);
+                            button.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    if (gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
+                                        gameController.chooseWrong();
+                                    }
+                                    SoundManager.playSound(R.raw.incorrect);
+                                }
+                            });
+                            ViewHelper.addClickWrongEffect(button);
+                        }
+
+                        //common
+                        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(getCellLength(column),getCellLength(column));
+                        params.setMargins(CELL_MARGIN, CELL_MARGIN, CELL_MARGIN, CELL_MARGIN);
+                        button.setLayoutParams(params);
+                        button.setPadding(0, 0, 0, 0);
+                        button.setTextSize(getTextSize(column));
+
+                        row.addView(button);
+                        index++;
                     }
 
-                    //common
-                    GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                    params.setMargins(CELL_MARGIN, CELL_MARGIN, CELL_MARGIN, CELL_MARGIN);
-                    button.setLayoutParams(params);
-                    button.setHeight(getCellLength(column));
-                    button.setWidth(getCellLength(column));
-                    button.setPadding(0, 0, 0, 0);
-                    button.setTextSize(getTextSize(column));
 
-
-                    gameBoard.addView(button);
+                    gameBoard.addView(row);
                 }
             }
 
@@ -224,13 +257,13 @@ public class GameActivity extends Activity {
     }
 
     private void hideAll() {
-        buttonGroupGameOver.setVisibility(View.INVISIBLE);
-        buttonGroupPause.setVisibility(View.INVISIBLE);
-        buttonPause.setVisibility(View.INVISIBLE);
+        ViewHelper.hideView(buttonGroupGameOver);
+        ViewHelper.hideView(buttonGroupPause);
+        ViewHelper.hideView(buttonPause);
 
-        relativeLayoutGameOver.setVisibility(View.INVISIBLE);
-        relativeLayoutPause.setVisibility(View.INVISIBLE);
-        relativeLayoutGiveUp.setVisibility(View.INVISIBLE);
+        ViewHelper.hideView(relativeLayoutGameOver);
+        ViewHelper.hideView(relativeLayoutPause);
+        ViewHelper.hideView(relativeLayoutGiveUp);
     }
 
     private void initPanels() {
@@ -239,12 +272,13 @@ public class GameActivity extends Activity {
         relativeLayoutGameOver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                relativeLayoutGameOver.setVisibility(View.INVISIBLE);
+                ViewHelper.hideView(relativeLayoutGameOver);
             }
         });
 
         relativeLayoutGiveUp = (RelativeLayout)findViewById(R.id.relativeLayoutGiveUp);
-
+        relativeLayoutTopPanel = findViewById(R.id.relativeLayoutTopPanel);
+        relativeLayoutTopPanel.startAnimation(slideDown);
 
         buildGameBoard();
     }
@@ -268,7 +302,7 @@ public class GameActivity extends Activity {
         RelativeLayout relativeLayoutGameBoardPanel = (RelativeLayout)findViewById(R.id.relativeLayoutGameBoardPanel);
         relativeLayoutGameBoardPanel.addView(gameBoardWrapperLayout);
 
-        gameBoard = new GridLayout(this);
+        gameBoard = new LinearLayout(this);
         gameBoardLength = boardLengthPx - 2*BOARD_PADDING;
         RelativeLayout.LayoutParams gameBordParams = new RelativeLayout.LayoutParams(gameBoardLength,gameBoardLength);
         gameBordParams.addRule(RelativeLayout.CENTER_IN_PARENT);
@@ -276,8 +310,9 @@ public class GameActivity extends Activity {
         gameBoardWrapperLayout.addView(gameBoard);
         GradientDrawable shape =  new GradientDrawable();
         shape.setCornerRadius(10);
-        shape.setColor(Color.GRAY);
+        shape.setColor(Color.argb(255,150,150,150));
         gameBoard.setBackgroundDrawable(shape);
+        gameBoard.setOrientation(LinearLayout.VERTICAL);
     }
 
     private void initWidgets() {
@@ -362,7 +397,10 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 SoundManager.playSound(R.raw.click);
+
+                ViewHelper.hideView(relativeLayoutPause);
                 relativeLayoutGiveUp.setVisibility(View.VISIBLE);
+                relativeLayoutGiveUp.startAnimation(fadeIn);
             }
         });
 
@@ -378,7 +416,9 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 SoundManager.playSound(R.raw.click);
-                relativeLayoutGiveUp.setVisibility(View.INVISIBLE);
+                ViewHelper.hideView(relativeLayoutGiveUp);
+                relativeLayoutPause.setVisibility(View.VISIBLE);
+                relativeLayoutPause.startAnimation(fadeIn);
             }
         });
     }
@@ -405,8 +445,10 @@ public class GameActivity extends Activity {
     @Override
     public void onPause() {
         super.onPause();
+
         if(gameController.getCurrentStatus() == GameController.GameStatus.GOING) {
             gameController.pauseGame();
         }
     }
+
 }

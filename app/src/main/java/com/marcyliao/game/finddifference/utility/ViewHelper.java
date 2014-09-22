@@ -80,4 +80,9 @@ public class ViewHelper {
         ViewHelper.addClickEffect(button);
         return button;
     }
+
+    public static void hideView(View v) {
+        v.clearAnimation();
+        v.setVisibility(View.INVISIBLE);
+    }
 }

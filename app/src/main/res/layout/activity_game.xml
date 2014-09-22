@@ -8,247 +8,250 @@
 
     <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="140dp"
-        android:id="@+id/relativeLayoutTop"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#fff">
-
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/linearLayoutGameInfo"
-            android:id="@+id/progressBarTimer"
-            android:layout_marginLeft="20dp"
-            android:progressDrawable="@drawable/progress_bar"
-            android:layout_marginRight="20dp"
-            android:indeterminate="false"/>
-
-        <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="100dp"
-            android:id="@+id/linearLayoutGameInfo"
-            android:background="#fff"
-            android:orientation="horizontal"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true">
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent" >
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:orientation="vertical"
-                    android:background="@drawable/orange_bg"
-                    android:id="@+id/linearLayoutNumberOfTiles"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:padding="10dp" >
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0sp"
-                        android:textColor="#fff"
-                        android:layout_weight="1"
-                        android:textSize="23sp"
-                        android:gravity="center"
-                        android:id="@+id/textViewNumberOfColumns"
-                        android:text="4X" />
-
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent" >
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:orientation="vertical"
-                    android:background="@drawable/orange_bg"
-                    android:id="@+id/linearLayoutLevels"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp" >
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0sp"
-                        android:layout_weight="0.8"
-                        android:textColor="#fff"
-                        android:text="LEVEL"
-                        android:textSize="17sp"
-                        android:gravity="center_horizontal|bottom" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0sp"
-                        android:textColor="#fff"
-                        android:layout_weight="1"
-                        android:textSize="23sp"
-                        android:gravity="center"
-                        android:id="@+id/textViewLevel"
-                        android:text="7" />
-                </LinearLayout>
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent" >
-
-                <LinearLayout
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
-                    android:orientation="vertical"
-                    android:background="@drawable/orange_bg"
-                    android:id="@+id/linearLayoutBest"
-                    android:layout_centerVertical="true"
-                    android:layout_centerHorizontal="true"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp">
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0sp"
-                        android:layout_weight="0.8"
-                        android:textColor="#fff"
-                        android:text="BEST"
-                        android:textSize="17sp"
-                        android:gravity="center_horizontal|bottom" />
-
-                    <TextView
-                        android:layout_width="fill_parent"
-                        android:layout_height="0sp"
-                        android:textColor="#fff"
-                        android:layout_weight="1"
-                        android:textSize="23sp"
-                        android:gravity="center"
-                        android:id="@+id/textViewBestNumber"
-                        android:text="55" />
-                </LinearLayout>
-            </RelativeLayout>
-        </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/relativeLayoutTop"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_above="@+id/relativeLayoutBottom"
-        android:id="@+id/relativeLayoutGameBoardPanel"
-        android:background="#fff">
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="100dp"
-        android:id="@+id/relativeLayoutBottom"
-        android:layout_alignParentBottom="true">
+        android:id="@+id/relativeLayoutTopPanel">
 
         <RelativeLayout
             android:layout_width="fill_parent"
-            android:layout_height="40dp"
-            android:background="@drawable/panel_bottom_bg"
+            android:layout_height="140dp"
+            android:id="@+id/relativeLayoutTop"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" >
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:background="#fff">
+
+            <ProgressBar
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/linearLayoutGameInfo"
+                android:id="@+id/progressBarTimer"
+                android:layout_marginLeft="20dp"
+                android:progressDrawable="@drawable/progress_bar"
+                android:layout_marginRight="20dp"
+                android:indeterminate="false"/>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="100dp"
+                android:id="@+id/linearLayoutGameInfo"
+                android:background="#fff"
+                android:orientation="horizontal"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent" >
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/orange_bg"
+                        android:id="@+id/linearLayoutNumberOfTiles"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:padding="10dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="0sp"
+                            android:textColor="#fff"
+                            android:layout_weight="1"
+                            android:textSize="23sp"
+                            android:gravity="center"
+                            android:id="@+id/textViewNumberOfColumns"/>
+
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent" >
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/orange_bg"
+                        android:id="@+id/linearLayoutLevels"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp" >
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="0sp"
+                            android:layout_weight="0.8"
+                            android:textColor="#fff"
+                            android:text="@string/level"
+                            android:textSize="17sp"
+                            android:gravity="center_horizontal|bottom" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="0sp"
+                            android:textColor="#fff"
+                            android:layout_weight="1"
+                            android:textSize="23sp"
+                            android:gravity="center"
+                            android:id="@+id/textViewLevel"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent" >
+
+                    <LinearLayout
+                        android:layout_width="70dp"
+                        android:layout_height="70dp"
+                        android:orientation="vertical"
+                        android:background="@drawable/orange_bg"
+                        android:id="@+id/linearLayoutBest"
+                        android:layout_centerVertical="true"
+                        android:layout_centerHorizontal="true"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp">
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="0sp"
+                            android:layout_weight="0.8"
+                            android:textColor="#fff"
+                            android:text="@string/best"
+                            android:textSize="17sp"
+                            android:gravity="center_horizontal|bottom" />
+
+                        <TextView
+                            android:layout_width="fill_parent"
+                            android:layout_height="0sp"
+                            android:textColor="#fff"
+                            android:layout_weight="1"
+                            android:textSize="23sp"
+                            android:gravity="center"
+                            android:id="@+id/textViewBestNumber" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/relativeLayoutTop"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_above="@+id/relativeLayoutBottom"
+            android:id="@+id/relativeLayoutGameBoardPanel"
+            android:background="#fff">
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:layout_width="230dp"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:background="@drawable/game_button_group_bg"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:padding="10dp"
-            android:id="@+id/buttonGroupGameOver">
+        <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="100dp"
+            android:id="@+id/relativeLayoutBottom"
+            android:layout_alignParentBottom="true">
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:background="@drawable/panel_bottom_bg"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" >
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="230dp"
+                android:layout_height="80dp"
+                android:orientation="horizontal"
+                android:background="@drawable/game_button_group_bg"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:id="@+id/buttonGroupGameOver">
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/green_bg_left_corner"
+                    android:src="@drawable/back"
+                    android:id="@+id/buttonBack"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"/>
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/sky_blue_bg_no_corner"
+                    android:src="@drawable/share"
+                    android:id="@+id/buttonShare"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"/>
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/purple_bg_right_corner"
+                    android:src="@drawable/restart"
+                    android:id="@+id/buttonRestart"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter"/>
+            </LinearLayout>
 
             <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent"
-                android:background="@drawable/green_bg_left_corner"
-                android:src="@drawable/back"
-                android:id="@+id/buttonBack"
-                android:padding="15dp"
-                android:scaleType="fitCenter"/>
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent"
-                android:background="@drawable/sky_blue_bg_no_corner"
-                android:src="@drawable/share"
-                android:id="@+id/buttonShare"
-                android:padding="15dp"
-                android:scaleType="fitCenter"/>
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent"
-                android:background="@drawable/purple_bg_right_corner"
-                android:src="@drawable/restart"
-                android:id="@+id/buttonRestart"
-                android:padding="15dp"
-                android:scaleType="fitCenter"/>
-        </LinearLayout>
-
-        <ImageButton
-            android:layout_width="230dp"
-            android:layout_height="80dp"
-            android:id="@+id/buttonPause"
-            android:background="@drawable/pause_button_bg"
-            android:src="@drawable/pause"
-            android:padding="20dp"
-            android:scaleType="fitCenter"
-            android:layout_centerHorizontal="true" />
-
-        <LinearLayout
-            android:layout_width="230dp"
-            android:layout_height="80dp"
-            android:orientation="horizontal"
-            android:background="@drawable/game_button_group_bg"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:padding="10dp"
-            android:id="@+id/buttonGroupPause">
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="fill_parent"
-                android:background="@drawable/green_bg_left_corner"
-                android:src="@drawable/back"
-                android:id="@+id/buttonPauseBack"
-                android:padding="15dp"
-                android:scaleType="fitCenter" />
-
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_height="fill_parent"
-                android:id="@+id/buttonStart"
-                android:background="@drawable/deep_orange_bg_right_corner"
-                android:src="@drawable/start"
+                android:layout_width="230dp"
+                android:layout_height="80dp"
+                android:id="@+id/buttonPause"
+                android:background="@drawable/pause_button_bg"
+                android:src="@drawable/pause"
                 android:padding="20dp"
                 android:scaleType="fitCenter"
                 android:layout_centerHorizontal="true" />
-        </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="230dp"
+                android:layout_height="80dp"
+                android:orientation="horizontal"
+                android:background="@drawable/game_button_group_bg"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:padding="10dp"
+                android:id="@+id/buttonGroupPause">
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="fill_parent"
+                    android:background="@drawable/green_bg_left_corner"
+                    android:src="@drawable/back"
+                    android:id="@+id/buttonPauseBack"
+                    android:padding="15dp"
+                    android:scaleType="fitCenter" />
+
+                <ImageButton
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="fill_parent"
+                    android:id="@+id/buttonStart"
+                    android:background="@drawable/deep_orange_bg_right_corner"
+                    android:src="@drawable/start"
+                    android:padding="20dp"
+                    android:scaleType="fitCenter"
+                    android:layout_centerHorizontal="true" />
+            </LinearLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -264,7 +267,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Game Over"
+            android:text="@string/game_over"
             android:textSize="40dp"
             android:textColor="#f17541"
             android:layout_centerVertical="true"
@@ -283,7 +286,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Pause"
+            android:text="@string/pause"
             android:textSize="40dp"
             android:textColor="#f17541"
             android:layout_centerVertical="true"
@@ -302,7 +305,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="GIVE UP THIS PLAY?"
+            android:text="@string/give_up_this_play"
             android:textSize="20dp"
             android:textColor="#f17541"
             android:layout_marginTop="40dp"
@@ -320,7 +323,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
-                android:text="YES"
+                android:text="@string/yes"
                 android:textColor="#eee"
                 android:background="@drawable/grey_bg"
                 android:id="@+id/buttonGiveUpYes"
@@ -332,7 +335,7 @@
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="60dp"
                 android:layout_height="40dp"
-                android:text="NO"
+                android:text="@string/no"
                 android:textColor="#eee"
                 android:background="@drawable/grey_bg"
                 android:id="@+id/buttonGiveUpNo"
