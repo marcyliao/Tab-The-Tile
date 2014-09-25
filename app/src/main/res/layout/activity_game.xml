@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/tiles"
     android:scaleType="fitEnd"
-    tools:context="com.marcyliao.game.finddifference.view.GameActivity">
+    tools:context="com.marcyliao.game.tapthetile.view.GameActivity">
 
     <RelativeLayout
         android:layout_width="fill_parent"
