@@ -9,6 +9,7 @@ public interface Mode {
     public final static int MIXED = 0;
     public final static int COLOR = 1;
     public final static int CHAR = 2;
+    public final static int ALL = 4;
 
     public final static int NUM_MODES = 3;
 

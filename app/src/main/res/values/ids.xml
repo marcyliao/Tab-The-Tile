@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+Google Play game services IDs.
+Save this file as res/values/games-ids.xml in your project.
+-->
+<resources>
+    <string name="app_id">826168488187</string>
+    <string name="achievement_color_blind">CgkI--Hq24UYEAIQBw</string>
+    <string name="achievement_abled_mankind">CgkI--Hq24UYEAIQCg</string>
+    <string name="achievement_color_master">CgkI--Hq24UYEAIQCw</string>
+    <string name="achievement_illiteracy">CgkI--Hq24UYEAIQDA</string>
+    <string name="achievement_char_scholar">CgkI--Hq24UYEAIQDQ</string>
+    <string name="achievement_char_master">CgkI--Hq24UYEAIQDg</string>
+    <string name="achievement_almighty_god">CgkI--Hq24UYEAIQDw</string>
+    <string name="leaderboard_colors">CgkI--Hq24UYEAIQAg</string>
+    <string name="leaderboard_characters">CgkI--Hq24UYEAIQCA</string>
+    <string name="leaderboard_mixed">CgkI--Hq24UYEAIQCQ</string>
+
+    <string name="banner_id">ca-app-pub-3324178775202062/3267860831</string>
+</resources>

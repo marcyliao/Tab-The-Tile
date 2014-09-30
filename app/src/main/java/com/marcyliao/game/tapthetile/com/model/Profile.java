@@ -3,6 +3,8 @@ package com.marcyliao.game.tapthetile.com.model;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.games.Games;
 import com.marcyliao.game.tapthetile.R;
 import com.marcyliao.game.tapthetile.com.model.mode.Mode;
 
@@ -11,9 +13,9 @@ import com.marcyliao.game.tapthetile.com.model.mode.Mode;
  */
 public class Profile {
     private static String PROFILE = "PROFILE";
-    private static String BEST_MIXED_MODE = "BEST_MIXED_MODE";
-    private static String BEST_COLOR_MODE = "BEST_COLOR_MODE";
-    private static String BEST_CHAR_MODE = "BEST_CHAR_MODE";
+    public static String BEST_MIXED_MODE = "BEST_MIXED_MODE";
+    public static String BEST_COLOR_MODE = "BEST_COLOR_MODE";
+    public static String BEST_CHAR_MODE = "BEST_CHAR_MODE";
     private static String CURRENT_MODE = "CURRENT_MODE";
 
     private int bestOfMixedMode;
@@ -120,5 +122,54 @@ public class Profile {
             return context.getString(R.string.character);
         else
             return null;
+    }
+
+    public void submitBestCurrentMode(Context context, GoogleApiClient client) {
+        switch (currentMode) {
+            case Mode.COLOR:
+                submitBest(context,client,Mode.COLOR);
+                break;
+            case Mode.CHAR:
+                submitBest(context,client,Mode.CHAR);
+                break;
+            case Mode.MIXED:
+                submitBest(context,client,Mode.MIXED);
+                break;
+        }
+    }
+
+    public void synBest(Context context, GoogleApiClient client) {
+        submitBest(context,client,Mode.ALL);
+    }
+
+    public void submitBest(Context context, GoogleApiClient client, int mode){
+        if(mode == Mode.ALL || mode == Mode.MIXED) {
+            if (bestOfMixedMode >= 150)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_almighty_god));
+
+            Games.Leaderboards.submitScore(client, context.getString(R.string.leaderboard_mixed), bestOfMixedMode);
+        }
+
+        if(mode == Mode.ALL || mode == Mode.CHAR) {
+            if (bestOfCharMode >= 20)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_illiteracy));
+            if (bestOfCharMode >= 60)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_char_scholar));
+            if (bestOfCharMode >= 120)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_char_master));
+
+            Games.Leaderboards.submitScore(client, context.getString(R.string.leaderboard_characters), bestOfCharMode);
+        }
+
+        if(mode == Mode.ALL || mode == Mode.COLOR) {
+            if (bestOfColorMode >= 20)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_color_blind));
+            if (bestOfColorMode >= 40)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_abled_mankind));
+            if (bestOfColorMode >= 90)
+                Games.Achievements.unlock(client, context.getString(R.string.achievement_color_master));
+
+            Games.Leaderboards.submitScore(client, context.getString(R.string.leaderboard_colors), bestOfColorMode);
+        }
     }
 }

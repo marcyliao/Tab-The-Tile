@@ -1,6 +1,5 @@
 package com.marcyliao.game.tapthetile.view;
 
-import android.app.Activity;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
@@ -14,7 +13,11 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.example.games.basegameutils.BaseGameActivity;
 import com.marcyliao.game.tapthetile.R;
+import com.marcyliao.game.tapthetile.com.model.Profile;
 import com.marcyliao.game.tapthetile.com.model.tile.CharTile;
 import com.marcyliao.game.tapthetile.com.model.tile.ColorTile;
 import com.marcyliao.game.tapthetile.com.model.tile.Tile;
@@ -25,7 +28,7 @@ import com.marcyliao.game.tapthetile.utility.SizeHelper;
 import com.marcyliao.game.tapthetile.utility.SoundManager;
 import com.marcyliao.game.tapthetile.utility.ViewHelper;
 
-public class GameActivity extends Activity {
+public class GameActivity extends BaseGameActivity {
     //UI properties
     public static final int BOARD_MARGIN = 50;
     public static final int BOARD_PADDING = 10;
@@ -74,6 +77,8 @@ public class GameActivity extends Activity {
     private View trueTileButton;
     private Tile trueTile;
 
+    private AdView adView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,9 +90,16 @@ public class GameActivity extends Activity {
         initPanels();
         initGameController();
         setHighScreenBrightness();
+        initAds();
         
         gameController.startGame();
 
+    }
+
+    private void initAds() {
+        adView = (AdView)this.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void initAnimation() {
@@ -124,6 +136,7 @@ public class GameActivity extends Activity {
                 relativeLayoutPause.setVisibility(View.VISIBLE);
                 relativeLayoutPause.startAnimation(fadeIn);
                 buttonGroupPause.setVisibility(View.VISIBLE);
+                adView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -143,12 +156,22 @@ public class GameActivity extends Activity {
                     trueTileButton.startAnimation(animBlink);
                 else if(trueTile.getType() == Tile.Type.COLOR)
                     trueTileButton.startAnimation(animBubble);
+
+                if(isSignedIn()) {
+                    Profile profile = Profile.loadProfile(GameActivity.this);
+                    profile.submitBestCurrentMode(GameActivity.this, getApiClient());
+                }
+
+                adView.setVisibility(View.VISIBLE);
+
+
             }
 
             @Override
             public void onGameStart() {
                 hideAll();
                 buttonPause.setVisibility(View.VISIBLE);
+                adView.setVisibility(View.INVISIBLE);
             }
 
             @Override
@@ -226,6 +249,8 @@ public class GameActivity extends Activity {
             public void onResume() {
                 hideAll();
                 buttonPause.setVisibility(View.VISIBLE);
+
+                adView.setVisibility(View.INVISIBLE);
             }
         });
     }
@@ -274,6 +299,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 ViewHelper.hideView(relativeLayoutGameOver);
+                adView.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -452,4 +478,13 @@ public class GameActivity extends Activity {
         }
     }
 
+    @Override
+    public void onSignInFailed() {
+
+    }
+
+    @Override
+    public void onSignInSucceeded() {
+
+    }
 }

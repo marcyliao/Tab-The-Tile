@@ -1,6 +1,5 @@
 package com.marcyliao.game.tapthetile.view;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +9,10 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.games.Games;
+import com.google.example.games.basegameutils.BaseGameActivity;
 import com.marcyliao.game.tapthetile.R;
 import com.marcyliao.game.tapthetile.com.model.Profile;
 import com.marcyliao.game.tapthetile.com.model.Setting;
@@ -19,16 +22,21 @@ import com.marcyliao.game.tapthetile.utility.SoundManager;
 import com.marcyliao.game.tapthetile.utility.ViewHelper;
 
 
-public class StartActivity extends Activity {
+public class StartActivity extends BaseGameActivity {
 
     private View buttonStart;
     private View buttonMode;
     private View buttonShare;
     private View buttonSound;
     private View buttonBest;
+    private View buttonAchievement;
+    private View buttonLeaderBoard;
 
     private TextView textViewBest;
     private TextView textViewMode;
+
+    private final static int REQUEST_ACHIEVEMENTS = 1011;
+    private final static int REQUEST_LEADERBOARD = 1012;
 
     //layouts
     private RelativeLayout relativeLayoutBottomPanel;
@@ -53,12 +61,20 @@ public class StartActivity extends Activity {
         initSounds();
         initAnimation();
 
+        initAds();
+
+    }
+
+    private void initAds() {
+        AdView adView = (AdView)this.findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
     }
 
     private void initMovingBackground() {
         View imageViewBg1 = findViewById(R.id.imageViewBg1);
         View imageViewBg2 = findViewById(R.id.imageViewBg2);
-        imageViewBg1.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_in_from_right));
+        imageViewBg1.startAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_from_right));
         imageViewBg2.startAnimation(AnimationUtils.loadAnimation(this,R.anim.slide_out_fo_left));
     }
 
@@ -95,6 +111,8 @@ public class StartActivity extends Activity {
         buttonBest = ViewHelper.getButtonWithEffect(this,R.id.buttonBest);
         buttonShare = ViewHelper.getButtonWithEffect(this, R.id.buttonShare);
         buttonMode = ViewHelper.getButtonWithEffect(this,R.id.buttonMode);
+        buttonAchievement = ViewHelper.getButtonWithEffect(this,R.id.buttonAchievement);
+        buttonLeaderBoard = ViewHelper.getButtonWithEffect(this,R.id.buttonLeaderBoard);
 
         textViewBest = (TextView) findViewById(R.id.textViewBestNumber);
         textViewMode = (TextView) findViewById(R.id.textViewMode);
@@ -158,6 +176,34 @@ public class StartActivity extends Activity {
             }
         });
 
+        buttonAchievement.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isSignedIn()) {
+                    startActivityForResult(Games.Achievements.getAchievementsIntent(getApiClient()), REQUEST_ACHIEVEMENTS);
+                }
+                else {
+                    beginUserInitiatedSignIn();
+                }
+
+                SoundManager.playSound(R.raw.click);
+            }
+        });
+
+        buttonLeaderBoard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isSignedIn()) {
+                    startActivityForResult(Games.Leaderboards.getAllLeaderboardsIntent(getApiClient()), REQUEST_LEADERBOARD);
+                }
+                else {
+                    beginUserInitiatedSignIn();
+                }
+
+                SoundManager.playSound(R.raw.click);
+            }
+        });
+
         updateWidgets();
     }
 
@@ -186,5 +232,15 @@ public class StartActivity extends Activity {
     protected void onDestroy() {
         SoundManager.cleanup();
         super.onDestroy();
+    }
+
+    @Override
+    public void onSignInFailed() {
+    }
+
+    @Override
+    public void onSignInSucceeded() {
+        Profile profile = Profile.loadProfile(this);
+        profile.synBest(this,getApiClient());
     }
 }
